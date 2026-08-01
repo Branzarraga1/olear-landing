@@ -42,85 +42,76 @@ function ProductDissolve() {
   const [active, setActive] = useState(products[0]);
 
   return (
-    <motion.div
-      className="relative -mx-6 overflow-hidden px-6 py-16 md:-mx-0 md:rounded-3xl md:px-10"
-      animate={{ backgroundColor: active.darkColor }}
-      transition={{ duration: 0.9, ease: "easeInOut" }}
-    >
-      {/* Fade negro suave desde abajo */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent" />
+    <div className="grid items-center gap-12 lg:grid-cols-2">
+      
+      {/* Botella */}
+      <div className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-2xl bg-stone-200 shadow-xl">
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={active.id}
+            src={active.image}
+            alt={active.name}
+            className="absolute inset-0 h-full w-full object-cover"
+            initial={{ opacity: 0, x: -18 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 18 }}
+            transition={{ duration: 0.55, ease: "easeInOut" }}
+          />
+        </AnimatePresence>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+      </div>
 
-      <div className="relative grid items-center gap-12 lg:grid-cols-2">
-        
-        {/* Botella */}
-        <div className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-2xl bg-black/20 shadow-xl">
-          <AnimatePresence mode="wait">
-            <motion.img
-              key={active.id}
-              src={active.image}
-              alt={active.name}
-              className="absolute inset-0 h-full w-full object-cover"
-              initial={{ opacity: 0, x: -18 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 18 }}
-              transition={{ duration: 0.55, ease: "easeInOut" }}
-            />
-          </AnimatePresence>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-        </div>
+      {/* Lista editorial */}
+      <div className="space-y-2">
+        <p className="mb-6 text-xs font-medium tracking-[0.2em] text-[#005d6d] uppercase">
+          Nuestra selección
+        </p>
 
-        {/* Lista editorial */}
-        <div className="space-y-2">
-          <p className="mb-6 text-xs font-medium tracking-[0.2em] text-white/50 uppercase">
-            Nuestra selección
-          </p>
+        {products.map((product) => {
+          const isActive = active.id === product.id;
 
-          {products.map((product) => {
-            const isActive = active.id === product.id;
-
-            return (
-              <motion.button
-                key={product.id}
-                onClick={() => setActive(product)}
-                className="group block w-full border-b border-white/10 py-5 text-left"
-                animate={{ x: isActive ? 16 : 0 }}
-                transition={{ duration: 0.35, ease: "easeOut" }}
-              >
-                <div className="flex items-baseline justify-between gap-4">
-                  <h3
-                    className={`font-serif text-2xl transition-colors duration-300 md:text-3xl ${
-                      isActive ? "" : "text-white/35 group-hover:text-white/60"
-                    }`}
-                    style={isActive ? { color: product.color } : undefined}
-                  >
-                    {product.name}
-                  </h3>
-
-                  <span
-                    className={`text-[11px] tracking-[0.18em] uppercase transition-opacity duration-300 ${
-                      isActive ? "opacity-100" : "opacity-0"
-                    }`}
-                    style={isActive ? { color: product.color } : undefined}
-                  >
-                    Seleccionado
-                  </span>
-                </div>
-
-                <p
-                  className={`mt-2 max-w-md text-sm leading-relaxed transition-all duration-300 ${
+          return (
+            <motion.button
+              key={product.id}
+              onClick={() => setActive(product)}
+              className="group block w-full border-b border-[#0D3C2A]/10 py-5 text-left"
+              animate={{ x: isActive ? 16 : 0 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+            >
+              <div className="flex items-baseline justify-between gap-4">
+                <h3
+                  className={`font-serif text-2xl transition-colors duration-300 md:text-3xl ${
                     isActive
-                      ? "translate-y-0 text-white/75 opacity-100"
-                      : "translate-y-1 text-white/30 opacity-0"
+                      ? "text-[#0D3C2A]"
+                      : "text-[#1E3B33]/40 group-hover:text-[#1E3B33]/70"
                   }`}
                 >
-                  {product.description}
-                </p>
-              </motion.button>
-            );
-          })}
-        </div>
+                  {product.name}
+                </h3>
+
+                <span
+                  className={`text-[11px] tracking-[0.18em] uppercase transition-opacity duration-300 ${
+                    isActive ? "opacity-100 text-[#005d6d]" : "opacity-0"
+                  }`}
+                >
+                  Seleccionado
+                </span>
+              </div>
+
+              <p
+                className={`mt-2 max-w-md text-sm leading-relaxed transition-all duration-300 ${
+                  isActive
+                    ? "translate-y-0 text-[#1E3B33]/80 opacity-100"
+                    : "translate-y-1 text-[#1E3B33]/40 opacity-0"
+                }`}
+              >
+                {product.description}
+              </p>
+            </motion.button>
+          );
+        })}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -136,26 +127,34 @@ type Story = {
 const stories: Story[] = [
   {
     id: 1,
-    title: "El origen",
-    short: "Olivos centenarios en el corazón de Maipú.",
-    full: "En las tierras de Maipú, Mendoza, crecen olivos que llevan generaciones. Aquí nace nuestro aceite, de raíces profundas y clima único que le otorga carácter y elegancia.",
-    image1: "https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=800&auto=format&fit=crop",
+    title: "Ligereza",
+    short: "Dulce y equilibrado para el día a día.",
+    full: "Nuestro aceite mas aromático perfecto para acompañar hojas verdes, brotes, quesos suaves y pescas. El limón es su mas grande aliado.",
+    image1: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=800&auto=format&fit=crop",
     image2: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=600&auto=format&fit=crop",
   },
   {
     id: 2,
-    title: "La cosecha",
-    short: "Recolección temprana para máxima pureza.",
-    full: "Cosechamos en el momento justo, cuando el fruto alcanza su máxima expresión. Una recolección cuidadosa y temprana que preserva aromas, frescura y la pureza del aceite.",
+    title: "Potencia",
+    short: "Notas verdes y carácter marcado.",
+    full: "Para quienes disfrutan de un sabor elegante, persistente y sobre todo potente. Ideal si querés un aceite con personalidad que se note en crudo.",
     image1: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=800&auto=format&fit=crop",
     image2: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?q=80&w=600&auto=format&fit=crop",
   },
   {
     id: 3,
-    title: "La esencia",
-    short: "Un AOVE de carácter y elegancia.",
-    full: "El resultado es un aceite de oliva virgen extra de personalidad marcada: frutado, equilibrado y con el alma de Mendoza en cada gota. Pensado para la alta cocina y el disfrute diario.",
-    image1: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?q=80&w=800&auto=format&fit=crop",
+    title: "Picor",
+    short: "Picor persistente y final intenso.",
+    full: "Si tu paladar pide un toque picante que quede en garganta, este perfil es el indicado. Perfecto para carnes, parrilla y platos con fuerza.",
+    image1: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800&auto=format&fit=crop",
+    image2: "https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=600&auto=format&fit=crop",
+  },
+  {
+    id: 4,
+    title: "Equilibrio",
+    short: "Para cerrar el plato con elegancia.",
+    full: "Cuando el plato ya está listo y solo falta el toque final: un hilado en crudo que sume aroma, brillo y equilibrio sin tapar el resto de sabores.",
+    image1: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=800&auto=format&fit=crop",
     image2: "https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=600&auto=format&fit=crop",
   },
 ];
@@ -337,87 +336,93 @@ export default function Home() {
   </div>
 </header>
 
-      {/* ===== HERO ===== */}
-      <section className="relative flex min-h-screen items-center overflow-hidden px-6 pt-20 pb-20 lg:px-12">
-        <div className="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-2">
-          
-          {/* Texto + Tríptico */}
-          <div className="order-2 lg:order-1">
-            <p className="mb-4 text-sm font-medium tracking-[0.25em] text-[#005d6d] uppercase">
-              Mendoza · Argentina
-            </p>
+{/* ===== HERO ===== */}
+<section className="relative flex min-h-screen items-center overflow-hidden px-6 pt-20 pb-20 lg:px-12">
+  
+{/* Imagen de fondo integrada */}
+<div className="pointer-events-none absolute inset-0">
+  <img
+    src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=1600&auto=format&fit=crop"
+    alt=""
+    className="h-full w-full object-cover object-[75%_center]"
+  />
 
-            <h1 className="font-serif text-5xl leading-[1.1] font-medium tracking-tight text-[#0D3C2A] md:text-6xl">
-              Aceite de Oliva
-              <br />
-              Virgen Extra
-            </h1>
+  {/* Solo se cubre la zona del texto/tríptico */}
+  <div className="absolute inset-0 bg-gradient-to-r from-[#f8f5f0] from-0% via-[#f8f5f0]/90 via-20% via-[#f8f5f0]/35 via-38% to-transparent to-55%" />
 
-            <p className="mt-6 max-w-md text-lg leading-relaxed text-[#1E3B33]/80">
-              Monovarietales y blends de calidad excepcional.
-              Origen, historia y pureza en cada gota.
-            </p>
+  {/* Muy suave arriba/abajo */}
+  <div className="absolute inset-0 bg-gradient-to-b from-[#f8f5f0]/25 via-transparent to-[#f8f5f0]/40" />
+</div>
 
-            <div className="mt-10 flex flex-wrap gap-4">
-              <button
-                onClick={() => scrollToSection("aceites")}
-                className="rounded-full bg-[#0D3C2A] px-8 py-3.5 text-sm font-medium text-[#f8f5f0] transition hover:bg-[#1E3B33]"
-              >
-                Descubrir el aceite
-              </button>
-              <button
-                onClick={() => scrollToSection("origen")}
-                className="rounded-full border border-[#0D3C2A]/30 px-8 py-3.5 text-sm font-medium text-[#0D3C2A] transition hover:border-[#0D3C2A] hover:bg-[#0D3C2A]/5"
-              >
-                Nuestra historia
-              </button>
-            </div>
+  {/* Contenido */}
+  <div className="relative z-10 mx-auto w-full max-w-7xl">
+    <div className="max-w-xl">
+      
+      <p className="mb-4 text-sm font-medium tracking-[0.25em] text-[#005d6d] uppercase">
+        Mendoza · Argentina
+      </p>
+      
+      <h1 className="font-serif text-5xl leading-[1.1] font-medium tracking-tight text-[#0D3C2A] md:text-6xl">
+        Aceite de Oliva
+        <br />
+        Virgen Extra
+      </h1>
+      
+      <p className="mt-6 max-w-md text-lg leading-relaxed text-[#1E3B33]/85">
+        Monovarietales y blends de calidad excepcional.
+        Origen, historia y pureza en cada gota.
+      </p>
 
-            {/* ===== TRÍPTICO ===== */}
-            <div className="mt-14">
-              <p className="mb-4 text-xs font-medium tracking-widest text-stone-400 uppercase">
-                La historia en tres actos
-              </p>
+      <div className="mt-10 flex flex-wrap gap-4">
+        <button
+          onClick={() => scrollToSection("aceites")}
+          className="rounded-full bg-[#0D3C2A] px-8 py-3.5 text-sm font-medium text-[#f8f5f0] transition hover:bg-[#1E3B33]"
+        >
+          Descubrir el aceite
+        </button>
+        <button
+          onClick={() => scrollToSection("origen")}
+          className="rounded-full border border-[#0D3C2A]/30 bg-[#f8f5f0]/70 px-8 py-3.5 text-sm font-medium text-[#0D3C2A] backdrop-blur-sm transition hover:border-[#0D3C2A] hover:bg-[#f8f5f0]"
+        >
+          Nuestra historia
+        </button>
+      </div>
 
-              <div className="flex gap-3">
-                {stories.map((story) => (
-                  <div
-                    key={story.id}
-                    onClick={() => setActiveStory(story)}
-                    className="group relative h-36 w-28 cursor-pointer overflow-hidden rounded-lg bg-stone-800 shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
-                  >
-                    <div
-                      className="absolute inset-0 bg-cover bg-center opacity-60 transition group-hover:opacity-40"
-                      style={{ backgroundImage: `url(${story.image1})` }}
-                    ></div>
-                    <div className="absolute inset-0 flex flex-col justify-end p-3 text-white">
-                      <span className="text-[10px] font-medium tracking-wider opacity-70">
-                        0{story.id}
-                      </span>
-                      <span className="text-sm font-medium leading-tight">
-                        {story.title}
-                      </span>
-                      <p className="mt-1 max-h-0 overflow-hidden text-[11px] leading-snug opacity-0 transition-all duration-300 group-hover:max-h-20 group-hover:opacity-100">
-                        {story.short}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+      {/* ===== TRÍPTICO ===== */}
+      <div className="mt-14">
+        <p className="mb-4 text-xs font-medium tracking-widest text-[#005d6d]/80 uppercase">
+          Descubre que te hace falta!
+        </p>
+
+        <div className="flex gap-3">
+          {stories.map((story) => (
+            <div
+              key={story.id}
+              onClick={() => setActiveStory(story)}
+              className="group relative h-36 w-28 cursor-pointer overflow-hidden rounded-lg bg-[#0D3C2A] shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+            >
+              <div
+                className="absolute inset-0 bg-cover bg-center opacity-60 transition group-hover:opacity-40"
+                style={{ backgroundImage: `url(${story.image1})` }}
+              />
+              <div className="absolute inset-0 flex flex-col justify-end p-3 text-white">
+                <span className="text-[10px] font-medium tracking-wider opacity-70">
+                  0{story.id}
+                </span>
+                <span className="text-sm font-medium leading-tight">
+                  {story.title}
+                </span>
+                <p className="mt-1 max-h-0 overflow-hidden text-[11px] leading-snug opacity-0 transition-all duration-300 group-hover:max-h-20 group-hover:opacity-100">
+                  {story.short}
+                </p>
               </div>
             </div>
-          </div>
+          ))}
+        </div>
+      </div>
 
-          {/* Imagen principal */}
-<div className="order-1 relative lg:order-2">
-  <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-stone-200 shadow-2xl">
-    <img
-      src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=1000&auto=format&fit=crop"
-      alt="Aceite de oliva virgen extra"
-      className="h-full w-full object-cover"
-    />
+    </div>
   </div>
-</div>
-</div>
 </section>
 
       {/* ===== POPUP / TARJETA ===== */}
